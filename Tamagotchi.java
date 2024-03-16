@@ -1,5 +1,8 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class Tamagotchi{
     // Atributos
@@ -40,6 +43,12 @@ public class Tamagotchi{
             }
         }
     }
+    private Runnable decair = () -> {
+        this.energia -= 1;
+        this.felicidade -= 1;
+        this.fome -= 1;
+        this.saude -= 1;
+    };
 
     // Construtor
     public Tamagotchi(String nome){
@@ -51,6 +60,9 @@ public class Tamagotchi{
         this.fome = 10;
         this.dataDeNascimento = LocalDateTime.now();
         this.cicloDeVida = "bebe";
+        // Agenda para decair a cada 5 segundos
+        ScheduledExecutorService agendador = Executors.newSingleThreadScheduledExecutor();
+        agendador.scheduleAtFixedRate(decair, 5, 5, TimeUnit.SECONDS);
     }
 
     // Getters
