@@ -13,6 +13,7 @@ public class Tamagotchi{
     private int fome;
     private LocalDateTime dataDeNascimento;
     private String cicloDeVida;
+    private String estadoSaude;
 
     // Métodos
     public void comer(){
@@ -44,11 +45,24 @@ public class Tamagotchi{
         }
     }
     private Runnable decair = () -> {
-        this.energia -= 1;
-        this.felicidade -= 1;
-        this.fome -= 1;
-        this.saude -= 1;
+        if (this.energia > 0){
+            this.energia -= 1;
+        }
+        if (this.felicidade > 0){
+            this.felicidade -= 1;
+        }
+        if (this.fome > 0){
+            this.fome -= 1;
+        }
+        if (this.saude > 0){
+            this.saude -= 1;
+        }
     };
+    public void testaEstadoSaude(){
+        if(this.saude <= 4){
+            this.estadoSaude = "doente";
+        } 
+    }
 
     // Construtor
     public Tamagotchi(String nome){
@@ -60,6 +74,7 @@ public class Tamagotchi{
         this.fome = 10;
         this.dataDeNascimento = LocalDateTime.now();
         this.cicloDeVida = "bebe";
+        this.estadoSaude = "saudavel";
         // Agenda para decair a cada 5 segundos
         ScheduledExecutorService agendador = Executors.newSingleThreadScheduledExecutor();
         agendador.scheduleAtFixedRate(decair, 5, 5, TimeUnit.SECONDS);
@@ -83,5 +98,8 @@ public class Tamagotchi{
     }
     public String getCicloDeVida(){
         return this.cicloDeVida;
+    }
+    public String getEstadoSaude(){
+        return this.estadoSaude;
     }
 }

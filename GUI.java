@@ -4,6 +4,8 @@ import java.awt.*;
 public class GUI {
 
     public static void main(String[] args) {
+        Tamagotchi teste = new Tamagotchi("Zé");
+
         ImageIcon icon = new ImageIcon("./fome.png");
 
         JButton button = new JButton(icon);
@@ -28,17 +30,22 @@ public class GUI {
         //frame2.setSize(300, 100);
 
         // Crie uma JProgressBar
-        JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
-        progressBar.setMinimum(0);
-        progressBar.setMaximum(100);
-        progressBar.setValue(50); // Defina um valor inicial (por exemplo, 50%)
-
+        JProgressBar barraDeFome = new JProgressBar(JProgressBar.HORIZONTAL);
+        barraDeFome.setMinimum(0);
+        barraDeFome.setMaximum(10);
+        barraDeFome.setValue(teste.getFome()); // Defina um valor inicial (por exemplo, 50%)
+        barraDeFome.setForeground(Color.GREEN);
         // Adicione a barra de progresso ao frame
-        frame.add(progressBar, BorderLayout.CENTER);
+        frame.add(barraDeFome, BorderLayout.CENTER);
 
         // Exiba o frame
         //frame2.setVisible(true);
         tornarJanelaTelaCheia(frame);
+
+        while (true){
+            atualizaBarraFome(barraDeFome, teste);
+            
+        }
     }
 
     private static void tornarJanelaTelaCheia(JFrame janela) {
@@ -47,6 +54,21 @@ public class GUI {
         janela.setExtendedState(JFrame.MAXIMIZED_BOTH); // Define o estado da janela como maximizado
         dispositivo.setFullScreenWindow(janela); // Coloca a janela em modo de tela cheia
         janela.setVisible(true); // Torna a janela visível
+    }
+    private static void atualizaBarraFome(JProgressBar barraDeFome, Tamagotchi tamagotchi){
+        int nivelFome = tamagotchi.getFome();
+        if (nivelFome >= 6){
+            barraDeFome.setValue(tamagotchi.getFome()); 
+            barraDeFome.setForeground(Color.GREEN);
+        } 
+        else if (nivelFome > 3){
+            barraDeFome.setValue(tamagotchi.getFome()); 
+            barraDeFome.setForeground(Color.YELLOW); 
+        } 
+        else {
+            barraDeFome.setValue(tamagotchi.getFome()); 
+            barraDeFome.setForeground(Color.RED);
+        }
     }
 
 }
