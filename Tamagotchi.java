@@ -1,8 +1,12 @@
+// Bibliotecas para pegar a data/hora/min/seg e formatar de acordo com a necessidade
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
+// Bibliotecas para executar funcoes a cada x segundos
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+// Biblioteca para os eventos aleatorios
+import java.util.Random;
 
 public class Tamagotchi{
     // Atributos
@@ -64,6 +68,22 @@ public class Tamagotchi{
         } 
     }
 
+    private Runnable eventoRandomico = () -> {
+        Random geradorAleatorio = new Random();
+        // Obtem um numero aleatorio entre [0 - 2].
+        int n = geradorAleatorio.nextInt(3);
+        switch(n){
+            case 0:
+                System.out.println("Chuva Gelada");
+                break;
+            case 1:
+                System.out.println("Sol Quente De Matar");
+                break;
+            case 2:
+                System.out.println("Pandemia");
+        }
+    };
+
     // Construtor
     public Tamagotchi(String nome){
         this.nome = nome;
@@ -78,6 +98,8 @@ public class Tamagotchi{
         // Agenda para decair a cada 5 segundos
         ScheduledExecutorService agendador = Executors.newSingleThreadScheduledExecutor();
         agendador.scheduleAtFixedRate(decair, 5, 5, TimeUnit.SECONDS);
+        // Agenda para acontecer um evento randomico a cada 30 segundos
+        agendador.scheduleAtFixedRate(eventoRandomico, 30, 30, TimeUnit.SECONDS);
     }
 
     // Getters
