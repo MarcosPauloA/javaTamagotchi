@@ -1,16 +1,53 @@
 import javax.swing.*;
 import java.awt.*;
 
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.File;
+import java.io.IOException;
+
 // GRAPHIC USER INTERFACE
 public class GUI {
 
     public static void main(String[] args) {
+        String audioFilePath = "path/to/your/audio.wav"; // Replace with the actual path to your audio file
+        
+        try {
+            // Get an audio input stream from the file
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(audioFilePath));
+
+            // Get a clip to play the audio
+            Clip clip = AudioSystem.getClip();
+
+            // Open the audio input stream
+            clip.open(audioInputStream);
+
+            // Start playing the audio
+            clip.start();
+
+            // Wait until the audio finishes playing
+            while (!clip.isRunning()) {
+                Thread.sleep(10);
+            }
+            while (clip.isRunning()) {
+                Thread.sleep(10);
+            }
+
+            // Close the clip
+            clip.close();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
         Tamagotchi tamagotchi = new Tamagotchi("Zé");
 
         // Icone Botao Fome
         ImageIcon iconeFome = new ImageIcon("./fome2.png");
         JButton botaoFome = new JButton(iconeFome);
-        botaoFome.setBorder(BorderFactory.createEmptyBorder());
         botaoFome.setContentAreaFilled(false);
         botaoFome.addActionListener(e -> {
             // Handle button click here
@@ -20,7 +57,7 @@ public class GUI {
         // Icone Botao Energia
         ImageIcon iconeEnergia = new ImageIcon("./energia2.png");    
         JButton botaoEnergia = new JButton(iconeEnergia);
-        botaoEnergia.setBorder(BorderFactory.createEmptyBorder());
+        // botaoEnergia.setBorder(BorderFactory.createEmptyBorder());
         botaoEnergia.setContentAreaFilled(false);
         botaoEnergia.addActionListener(e -> {
             // Handle button click here
@@ -30,7 +67,7 @@ public class GUI {
         // Icone Botao Felicidade
         ImageIcon iconeFelicidade = new ImageIcon("./dar-felicidade.png");    
         JButton botaoFelicidade = new JButton(iconeFelicidade);
-        botaoFelicidade.setBorder(BorderFactory.createEmptyBorder());
+        // botaoFelicidade.setBorder(BorderFactory.createEmptyBorder());
         botaoFelicidade.setContentAreaFilled(false);
         botaoFelicidade.addActionListener(e -> {
             // Handle button click here
@@ -40,7 +77,7 @@ public class GUI {
         // Icone Botao Saude
         ImageIcon iconeSaude = new ImageIcon("./cuidados-de-saude.png");    
         JButton botaoSaude = new JButton(iconeSaude);
-        botaoSaude.setBorder(BorderFactory.createEmptyBorder());
+        // botaoSaude.setBorder(BorderFactory.createEmptyBorder());
         botaoSaude.setContentAreaFilled(false);
         botaoSaude.addActionListener(e -> {
             // Handle button click here
@@ -105,8 +142,19 @@ public class GUI {
         restricoes.gridx = 3;
         restricoes.gridy = 1;
         frame.add(barraDeSaude, restricoes);
+        frame.getContentPane().setBackground(Color.white);
+        //frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Define o estado da janela como maximizado
+    
 
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Define o estado da janela como maximizado
+        // Create a JLabel with the image
+        JLabel imagemTamagotchi = new JLabel(new ImageIcon("./babyHealthy2.jpg"));
+        imagemTamagotchi.setBorder(BorderFactory.createEmptyBorder());
+        restricoes.gridwidth = 3;
+        restricoes.gridheight = 6;
+        restricoes.gridx = 1;
+        restricoes.gridy = 1;
+        frame.add(imagemTamagotchi, restricoes); 
+
         // Exiba o frame
         frame.setVisible(true);
 
@@ -127,19 +175,19 @@ public class GUI {
         janela.setVisible(true); // Torna a janela visível
     }
 */
-    private static void atualizaNivelBarra(JProgressBar barra, int valorAtual){
+    private static void atualizaNivelBarra(JProgressBar barra, float valorAtual){
         if (valorAtual >= 6){
-            barra.setValue(valorAtual); 
+            barra.setValue(Math.round(valorAtual)); 
             barra.setForeground(Color.GREEN);
         } 
         else if (valorAtual > 3){
-            barra.setValue(valorAtual); 
+            barra.setValue(Math.round(valorAtual)); 
             barra.setForeground(Color.YELLOW); 
         } 
         else {
-            barra.setValue(valorAtual); 
+            barra.setValue(Math.round(valorAtual)); 
             barra.setForeground(Color.RED);
+            System.out.println(barra.getName());
         }
     }
-
 }
