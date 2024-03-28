@@ -11,10 +11,10 @@ import java.util.Random;
 public class Tamagotchi{
     // Atributos
     private String nome;
-    private int energia;
-    private int felicidade;
-    private int saude;
-    private int fome;
+    private float energia;
+    private float felicidade;
+    private float saude;
+    private float fome;
     private LocalDateTime dataDeNascimento;
     private String cicloDeVida;
     private String estadoSaude;
@@ -50,16 +50,16 @@ public class Tamagotchi{
     }
     private Runnable decair = () -> {
         if (this.energia > 0){
-            this.energia -= 1;
+            this.energia -= 0.5;
         }
         if (this.felicidade > 0){
-            this.felicidade -= 1;
+            this.felicidade -= 0.2;
         }
         if (this.fome > 0){
-            this.fome -= 1;
+            this.fome -= 0.8;
         }
         if (this.saude > 0){
-            this.saude -= 1;
+            this.saude -= 0.1;
         }
     };
     public void testaEstadoSaude(){
@@ -97,7 +97,7 @@ public class Tamagotchi{
         this.estadoSaude = "saudavel";
         // Agenda para decair a cada 5 segundos
         ScheduledExecutorService agendador = Executors.newSingleThreadScheduledExecutor();
-        agendador.scheduleAtFixedRate(decair, 5, 5, TimeUnit.SECONDS);
+        agendador.scheduleAtFixedRate(decair, 2, 2, TimeUnit.SECONDS);
         // Agenda para acontecer um evento randomico a cada 30 segundos
         agendador.scheduleAtFixedRate(eventoRandomico, 30, 30, TimeUnit.SECONDS);
     }
@@ -106,16 +106,16 @@ public class Tamagotchi{
     public String getNome(){
         return this.nome;
     }
-    public int getEnergia(){
+    public float getEnergia(){
         return this.energia;
     }
-    public int getFelicidade(){
+    public float getFelicidade(){
         return this.felicidade;
     }
-    public int getSaude(){
+    public float getSaude(){
         return this.saude;
     }
-    public int getFome(){
+    public float getFome(){
         return this.fome;
     }
     public String getCicloDeVida(){
