@@ -12,7 +12,8 @@ import java.io.IOException;
 
 // GRAPHIC USER INTERFACE
 public class GUI {
-
+    private static JLabel imagemTamagotchi;
+    private static boolean trocouImagem;
     public static void main(String[] args) {
         String audioFilePath = "path/to/your/audio.wav"; // Replace with the actual path to your audio file
         
@@ -49,10 +50,7 @@ public class GUI {
         ImageIcon iconeFome = new ImageIcon("./fome2.png");
         JButton botaoFome = new JButton(iconeFome);
         botaoFome.setContentAreaFilled(false);
-        botaoFome.addActionListener(e -> {
-            // Handle button click here
-            tamagotchi.comer();
-        });
+
 
         // Icone Botao Energia
         ImageIcon iconeEnergia = new ImageIcon("./energia2.png");    
@@ -144,25 +142,26 @@ public class GUI {
         frame.add(barraDeSaude, restricoes);
         frame.getContentPane().setBackground(Color.white);
         //frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Define o estado da janela como maximizado
-    
-
+            
         // Create a JLabel with the image
-        JLabel imagemTamagotchi = new JLabel(new ImageIcon("./babyHealthy2.jpg"));
-        imagemTamagotchi.setBorder(BorderFactory.createEmptyBorder());
-        restricoes.gridwidth = 3;
-        restricoes.gridheight = 6;
-        restricoes.gridx = 1;
-        restricoes.gridy = 1;
-        frame.add(imagemTamagotchi, restricoes); 
+        GUI.imagemTamagotchi = new JLabel(new ImageIcon("./bbDoente.jpg"));
+        mudaImagem(frame, "saudavel");
+
 
         // Exiba o frame
         frame.setVisible(true);
 
+        botaoFome.addActionListener(e -> {
+            // Handle button click here
+            tamagotchi.comer();
+            mudaImagem(frame, "saudavel");
+        });
+
         while (true){
-            atualizaNivelBarra(barraDeEnergia, tamagotchi.getEnergia());
-            atualizaNivelBarra(barraDeFome, tamagotchi.getFome());
-            atualizaNivelBarra(barraDeSaude, tamagotchi.getSaude());
-            atualizaNivelBarra(barraDeFelicidade, tamagotchi.getFelicidade());
+            atualizaNivelBarra(barraDeEnergia, tamagotchi.getEnergia(), "cansado", frame);
+            atualizaNivelBarra(barraDeFome, tamagotchi.getFome(), "com fome", frame);
+            atualizaNivelBarra(barraDeSaude, tamagotchi.getSaude(), "doente", frame);
+            atualizaNivelBarra(barraDeFelicidade, tamagotchi.getFelicidade(), "triste", frame);
             
         }
     }
@@ -175,7 +174,7 @@ public class GUI {
         janela.setVisible(true); // Torna a janela visível
     }
 */
-    private static void atualizaNivelBarra(JProgressBar barra, float valorAtual){
+    private static void atualizaNivelBarra(JProgressBar barra, float valorAtual, String estado, JFrame frame){
         if (valorAtual >= 6){
             barra.setValue(Math.round(valorAtual)); 
             barra.setForeground(Color.GREEN);
@@ -187,7 +186,37 @@ public class GUI {
         else {
             barra.setValue(Math.round(valorAtual)); 
             barra.setForeground(Color.RED);
-            System.out.println(barra.getName());
+
+            mudaImagem(frame, estado);
         }
     }
+
+    private static void mudaImagem(JFrame frame, String estado){
+
+        GridBagConstraints restricoes = new GridBagConstraints();
+        restricoes.gridwidth = 3;
+        restricoes.gridheight = 6;
+        restricoes.gridx = 1;
+        restricoes.gridy = 1;
+        GUI.imagemTamagotchi.setBorder(BorderFactory.createEmptyBorder());
+        if ((estado == "com fome") && (!GUI.trocouImagem)){
+            frame.remove(GUI.imagemTamagotchi);
+            GUI.imagemTamagotchi = new JLabel(new ImageIcon("./bbDoente.jpg"));
+            GUI.trocouImagem = true;
+            frame.add(GUI.imagemTamagotchi, restricoes);
+            frame.revalidate(); 
+            frame.repaint();
+        }
+        if (estado == "saudavel"){
+            frame.remove(GUI.imagemTamagotchi);
+            GUI.trocouImagem = false;
+            GUI.imagemTamagotchi = new JLabel(new ImageIcon("./bbSaudavel.jpg"));
+            frame.add(GUI.imagemTamagotchi, restricoes);
+            frame.revalidate(); 
+            frame.repaint();
+            
+        }
+ 
+    }
+
 }
