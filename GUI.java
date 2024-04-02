@@ -14,6 +14,7 @@ import java.io.IOException;
 public class GUI {
     private static JLabel imagemTamagotchi;
     private static boolean trocouImagem;
+    private static Tamagotchi tamagotchi;
     public static void main(String[] args) {
         String audioFilePath = "path/to/your/audio.wav"; // Replace with the actual path to your audio file
         
@@ -44,12 +45,22 @@ public class GUI {
             e.printStackTrace();
         }
 
-        Tamagotchi tamagotchi = new Tamagotchi("Zé");
+        GUI.tamagotchi = new Tamagotchi("Zé");
+
+        // Criando o frame e adicionando os botões
+        JFrame frame = new JFrame("Java Tamagotchi");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new GridBagLayout());
 
         // Icone Botao Fome
         ImageIcon iconeFome = new ImageIcon("./fome2.png");
         JButton botaoFome = new JButton(iconeFome);
         botaoFome.setContentAreaFilled(false);
+        botaoFome.addActionListener(e -> {
+            // Handle button click here
+            GUI.tamagotchi.comer();
+            mudaImagem(frame, "saudavel");
+        });
 
 
         // Icone Botao Energia
@@ -59,7 +70,8 @@ public class GUI {
         botaoEnergia.setContentAreaFilled(false);
         botaoEnergia.addActionListener(e -> {
             // Handle button click here
-            tamagotchi.dormir();
+            GUI.tamagotchi.dormir();
+            mudaImagem(frame, "saudavel");
         });
 
         // Icone Botao Felicidade
@@ -69,7 +81,8 @@ public class GUI {
         botaoFelicidade.setContentAreaFilled(false);
         botaoFelicidade.addActionListener(e -> {
             // Handle button click here
-            tamagotchi.brincar();
+            GUI.tamagotchi.brincar();
+            mudaImagem(frame, "saudavel");
         });
 
         // Icone Botao Saude
@@ -79,13 +92,11 @@ public class GUI {
         botaoSaude.setContentAreaFilled(false);
         botaoSaude.addActionListener(e -> {
             // Handle button click here
-            tamagotchi.cuidar();
+            GUI.tamagotchi.cuidar();
+            mudaImagem(frame, "saudavel");
         });
 
-        // Criando o frame e adicionando os botões
-        JFrame frame = new JFrame("Java Tamagotchi");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new GridBagLayout());
+
         GridBagConstraints restricoes = new GridBagConstraints();
         restricoes.fill = GridBagConstraints.HORIZONTAL;
         //restricoes.gridwidth = 2;
@@ -151,17 +162,13 @@ public class GUI {
         // Exiba o frame
         frame.setVisible(true);
 
-        botaoFome.addActionListener(e -> {
-            // Handle button click here
-            tamagotchi.comer();
-            mudaImagem(frame, "saudavel");
-        });
+
 
         while (true){
-            atualizaNivelBarra(barraDeEnergia, tamagotchi.getEnergia(), "cansado", frame);
-            atualizaNivelBarra(barraDeFome, tamagotchi.getFome(), "com fome", frame);
-            atualizaNivelBarra(barraDeSaude, tamagotchi.getSaude(), "doente", frame);
-            atualizaNivelBarra(barraDeFelicidade, tamagotchi.getFelicidade(), "triste", frame);
+            atualizaNivelBarra(barraDeEnergia, GUI.tamagotchi.getEnergia(), "cansado", frame);
+            atualizaNivelBarra(barraDeFome, GUI.tamagotchi.getFome(), "com fome", frame);
+            atualizaNivelBarra(barraDeSaude, GUI.tamagotchi.getSaude(), "doente", frame);
+            atualizaNivelBarra(barraDeFelicidade, GUI.tamagotchi.getFelicidade(), "triste", frame);
             
         }
     }
@@ -201,22 +208,54 @@ public class GUI {
         GUI.imagemTamagotchi.setBorder(BorderFactory.createEmptyBorder());
         if ((estado == "com fome") && (!GUI.trocouImagem)){
             frame.remove(GUI.imagemTamagotchi);
-            GUI.imagemTamagotchi = new JLabel(new ImageIcon("./bbDoente.jpg"));
+            GUI.imagemTamagotchi.setIcon(new ImageIcon("./bbFome.jpg"));
             GUI.trocouImagem = true;
             frame.add(GUI.imagemTamagotchi, restricoes);
             frame.revalidate(); 
             frame.repaint();
         }
-        if (estado == "saudavel"){
+        if ((estado == "doente") && (!GUI.trocouImagem)){
             frame.remove(GUI.imagemTamagotchi);
-            GUI.trocouImagem = false;
-            GUI.imagemTamagotchi = new JLabel(new ImageIcon("./bbSaudavel.jpg"));
+            GUI.imagemTamagotchi.setIcon(new ImageIcon("./bbDoente.jpg"));
+            GUI.trocouImagem = true;
             frame.add(GUI.imagemTamagotchi, restricoes);
             frame.revalidate(); 
             frame.repaint();
-            
         }
- 
+        if ((estado == "triste") && (!GUI.trocouImagem)){
+            frame.remove(GUI.imagemTamagotchi);
+            GUI.imagemTamagotchi.setIcon(new ImageIcon("./bbTriste.jpeg"));
+            GUI.trocouImagem = true;
+            frame.add(GUI.imagemTamagotchi, restricoes);
+            frame.revalidate(); 
+            frame.repaint();
+        }
+        if ((estado == "cansado") && (!GUI.trocouImagem)){
+            frame.remove(GUI.imagemTamagotchi);
+            GUI.imagemTamagotchi.setIcon(new ImageIcon("./bbCansado.jpg"));
+            GUI.trocouImagem = true;
+            frame.add(GUI.imagemTamagotchi, restricoes);
+            frame.revalidate(); 
+            frame.repaint();
+        }
+        if (estado == "saudavel" && nenhumEstadoVermelho()){
+            frame.remove(GUI.imagemTamagotchi);
+            GUI.trocouImagem = false;
+            GUI.imagemTamagotchi.setIcon(new ImageIcon("./bbSaudavel.jpg"));
+            frame.add(GUI.imagemTamagotchi, restricoes);
+            frame.revalidate(); 
+            frame.repaint();
+        } else if (estado == "saudavel" && !nenhumEstadoVermelho()) {GUI.trocouImagem = false;}
     }
-
+    static boolean nenhumEstadoVermelho(){
+        if(Math.round(GUI.tamagotchi.getEnergia()) > 3 &&
+            Math.round(GUI.tamagotchi.getFelicidade()) > 3 &&
+            Math.round(GUI.tamagotchi.getFome()) > 3 &&
+            Math.round(GUI.tamagotchi.getEnergia()) > 3){
+                return true;
+            }
+        else{
+            return false;
+        }
+    }
 }
