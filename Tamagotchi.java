@@ -21,16 +21,16 @@ public class Tamagotchi{
 
     // Métodos
     public void comer(){
-        this.fome += 2;
+        this.fome += 6;
     }
     public void dormir(){
-        this.energia += 2;
+        this.energia += 6;
     }
     public void cuidar(){
-        this.saude += 2;
+        this.saude += 6;
     }
     public void brincar(){
-        this.felicidade += 2;
+        this.felicidade += 6;
     }
     public void testaSeCresceu(){
         DateTimeFormatter formatadorData = DateTimeFormatter.ofPattern("mm");
@@ -38,11 +38,11 @@ public class Tamagotchi{
         String minutoAgora = formatadorData.format(agora);
         String minutoNascimento = formatadorData.format(this.dataDeNascimento);
         int tempoQueDemoraPraCrescer = 1;
-        if (this.getCicloDeVida() == "bebe"){
+        if (this.getCicloDeVida().equals("bebe")){
             if (Integer.parseInt(minutoAgora) >= Integer.parseInt(minutoNascimento)+tempoQueDemoraPraCrescer){
                 this.cicloDeVida = "adolescente";
             }
-        } else if (this.getCicloDeVida() == "adolescente"){
+        } else if (this.getCicloDeVida().equals("adolescente")){
             if (Integer.parseInt(minutoAgora) >= Integer.parseInt(minutoNascimento)+2*tempoQueDemoraPraCrescer){
                 this.cicloDeVida = "adulto";
             }
@@ -50,16 +50,16 @@ public class Tamagotchi{
     }
     private Runnable decair = () -> {
         if (this.energia > 0){
-            this.energia -= 0.5;
+            this.energia -= 0.6;
         }
         if (this.felicidade > 0){
-            this.felicidade -= 0.2;
+            this.felicidade -= 0.4;
         }
         if (this.fome > 0){
             this.fome -= 0.8;
         }
         if (this.saude > 0){
-            this.saude -= 0.1;
+            this.saude -= 0.2;
         }
     };
     public void testaEstadoSaude(){
@@ -75,12 +75,15 @@ public class Tamagotchi{
         switch(n){
             case 0:
                 System.out.println("Chuva Gelada");
+                this.saude -= 1;
                 break;
             case 1:
                 System.out.println("Sol Quente De Matar");
+                this.saude -= 1;
                 break;
             case 2:
                 System.out.println("Pandemia");
+                this.saude -= 1;
         }
     };
 

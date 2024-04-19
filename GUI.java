@@ -1,50 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
 
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.File;
-import java.io.IOException;
-
 // GRAPHIC USER INTERFACE
 public class GUI {
     private static JLabel imagemTamagotchi;
     private static boolean trocouImagem;
     private static Tamagotchi tamagotchi;
     public static void main(String[] args) {
-        String audioFilePath = "path/to/your/audio.wav"; // Replace with the actual path to your audio file
         
-        try {
-            // Get an audio input stream from the file
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(audioFilePath));
-
-            // Get a clip to play the audio
-            Clip clip = AudioSystem.getClip();
-
-            // Open the audio input stream
-            clip.open(audioInputStream);
-
-            // Start playing the audio
-            clip.start();
-
-            // Wait until the audio finishes playing
-            while (!clip.isRunning()) {
-                Thread.sleep(10);
-            }
-            while (clip.isRunning()) {
-                Thread.sleep(10);
-            }
-
-            // Close the clip
-            clip.close();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
         GUI.tamagotchi = new Tamagotchi("Zé");
 
         // Criando o frame e adicionando os botões
@@ -53,7 +16,7 @@ public class GUI {
         frame.setLayout(new GridBagLayout());
 
         // Icone Botao Fome
-        ImageIcon iconeFome = new ImageIcon("./fome2.png");
+        ImageIcon iconeFome = new ImageIcon("./assets/fome.png");
         JButton botaoFome = new JButton(iconeFome);
         botaoFome.setContentAreaFilled(false);
         botaoFome.addActionListener(e -> {
@@ -64,7 +27,7 @@ public class GUI {
 
 
         // Icone Botao Energia
-        ImageIcon iconeEnergia = new ImageIcon("./energia2.png");    
+        ImageIcon iconeEnergia = new ImageIcon("./assets/energia.png");    
         JButton botaoEnergia = new JButton(iconeEnergia);
         // botaoEnergia.setBorder(BorderFactory.createEmptyBorder());
         botaoEnergia.setContentAreaFilled(false);
@@ -75,7 +38,7 @@ public class GUI {
         });
 
         // Icone Botao Felicidade
-        ImageIcon iconeFelicidade = new ImageIcon("./dar-felicidade.png");    
+        ImageIcon iconeFelicidade = new ImageIcon("./assets/dar-felicidade.png");    
         JButton botaoFelicidade = new JButton(iconeFelicidade);
         // botaoFelicidade.setBorder(BorderFactory.createEmptyBorder());
         botaoFelicidade.setContentAreaFilled(false);
@@ -86,7 +49,7 @@ public class GUI {
         });
 
         // Icone Botao Saude
-        ImageIcon iconeSaude = new ImageIcon("./cuidados-de-saude.png");    
+        ImageIcon iconeSaude = new ImageIcon("./assets/cuidados-de-saude.png");    
         JButton botaoSaude = new JButton(iconeSaude);
         // botaoSaude.setBorder(BorderFactory.createEmptyBorder());
         botaoSaude.setContentAreaFilled(false);
@@ -155,14 +118,11 @@ public class GUI {
         //frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Define o estado da janela como maximizado
             
         // Create a JLabel with the image
-        GUI.imagemTamagotchi = new JLabel(new ImageIcon("./bbDoente.jpg"));
+        GUI.imagemTamagotchi = new JLabel(new ImageIcon("./assets/bbDoente.jpg"));
         mudaImagem(frame, "saudavel");
-
 
         // Exiba o frame
         frame.setVisible(true);
-
-
 
         while (true){
             atualizaNivelBarra(barraDeEnergia, GUI.tamagotchi.getEnergia(), "cansado", frame);
@@ -208,7 +168,7 @@ public class GUI {
         GUI.imagemTamagotchi.setBorder(BorderFactory.createEmptyBorder());
         if ((estado == "com fome") && (!GUI.trocouImagem)){
             frame.remove(GUI.imagemTamagotchi);
-            GUI.imagemTamagotchi.setIcon(new ImageIcon("./bbFome.jpg"));
+            GUI.imagemTamagotchi.setIcon(new ImageIcon("./assets/bbFome.jpg"));
             GUI.trocouImagem = true;
             frame.add(GUI.imagemTamagotchi, restricoes);
             frame.revalidate(); 
@@ -216,15 +176,16 @@ public class GUI {
         }
         if ((estado == "doente") && (!GUI.trocouImagem)){
             frame.remove(GUI.imagemTamagotchi);
-            GUI.imagemTamagotchi.setIcon(new ImageIcon("./bbDoente.jpg"));
+            GUI.imagemTamagotchi.setIcon(new ImageIcon("./assets/bbDoente.jpg"));
             GUI.trocouImagem = true;
             frame.add(GUI.imagemTamagotchi, restricoes);
             frame.revalidate(); 
             frame.repaint();
+
         }
         if ((estado == "triste") && (!GUI.trocouImagem)){
             frame.remove(GUI.imagemTamagotchi);
-            GUI.imagemTamagotchi.setIcon(new ImageIcon("./bbTriste.jpeg"));
+            GUI.imagemTamagotchi.setIcon(new ImageIcon("./assets/bbTriste.jpeg"));
             GUI.trocouImagem = true;
             frame.add(GUI.imagemTamagotchi, restricoes);
             frame.revalidate(); 
@@ -232,16 +193,15 @@ public class GUI {
         }
         if ((estado == "cansado") && (!GUI.trocouImagem)){
             frame.remove(GUI.imagemTamagotchi);
-            GUI.imagemTamagotchi.setIcon(new ImageIcon("./bbCansado.jpg"));
+            GUI.imagemTamagotchi.setIcon(new ImageIcon("./assets/bbCansado.jpg"));
             GUI.trocouImagem = true;
             frame.add(GUI.imagemTamagotchi, restricoes);
             frame.revalidate(); 
             frame.repaint();
         }
         if (estado == "saudavel" && nenhumEstadoVermelho()){
-            frame.remove(GUI.imagemTamagotchi);
             GUI.trocouImagem = false;
-            GUI.imagemTamagotchi.setIcon(new ImageIcon("./bbSaudavel.jpg"));
+            GUI.imagemTamagotchi.setIcon(new ImageIcon("./assets/bbSaudavel.jpg"));
             frame.add(GUI.imagemTamagotchi, restricoes);
             frame.revalidate(); 
             frame.repaint();
